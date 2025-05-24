@@ -1,0 +1,42 @@
+import Address from './Address';
+import Customer from './Customer';
+import DiscountApplication from './DiscountApplication';
+import GiftCard from './GiftCard';
+import LineItem from './LineItem';
+import Order from './Order';
+import ShippingMethod from './ShippingMethod';
+import TaxLine from './TaxLine';
+import Transaction from './Transaction';
+
+export default interface Checkout {
+  applied_gift_cards: GiftCard[];
+  attributes: { [key: string]: string }[];
+  billing_address: Address;
+  buyer_accepts_marketing: boolean;
+  cart_level_discount_applications: DiscountApplication[];
+  currency: string;
+  customer: Customer;
+  discount_applications: DiscountApplication[];
+  discounts_amount: number;
+  discounts_savings: number;
+  email: string;
+  gift_cards_amount: number;
+  id: number;
+  item_count: number;
+  line_items: LineItem[];
+  line_items_subtotal_price: number;
+  name: string;
+  note: string;
+  order: Order;
+  order_id: string;
+  order_name: string;
+  order_number: string;
+  requires_shipping: boolean;
+  shipping_address: Address;
+  shipping_method: ShippingMethod;
+  shipping_price: number;
+  tax_lines: TaxLine[];
+  tax_price: number;
+  total_price: number;
+  transactions: Transaction[];
+}

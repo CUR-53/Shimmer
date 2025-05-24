@@ -1,0 +1,108 @@
+<logo-slider>
+  <div id="section-id-{{ section.id }}" class="logos tw:relative tw:overflow-hidden tw:whitespace-nowrap tw:bg-white tw:pb-[15px] tw:pt-[20px] md:tw:px-[50px] md:tw:pb-[20px] md:tw:pt-[25px]">
+    <div class="logos-slide tw:inline-flex tw:animate-[25s_slide_infinite_linear] tw:whitespace-nowrap">
+      {% for block in section.blocks %}
+        <a class="tw:flex tw:h-[50px] tw:w-max tw:items-center tw:justify-center tw:px-[20px] md:tw:px-[30px]" href="{{ block.settings.image_link }}">
+          <img width="100" height="100" src="{{ block.settings.image | img_url: '400x400' }}">
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</logo-slider>
+
+<style>
+  @keyframes slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  .side-gradient:before {
+    left: -100px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), white);
+  }
+
+  .side-gradient:after {
+    right: -100px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), white);
+  }
+
+  .side-gradient:before,
+  .side-gradient:after {
+    position: absolute;
+    top: 0;
+    min-width: 200px;
+    max-width: 200px;
+    width: 100%;
+    height: 100%;
+    content: "";
+    z-index: 2;
+  }
+
+  .logos-slide {
+    animation: slide {{ section.settings.speed }}s linear infinite;
+  }
+
+  .logos-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+  }
+
+  @media (min-width: 768px) {
+    .side-gradient:before {
+      left: 0px;
+    }
+
+    .side-gradient:after {
+      right: 0px;
+    }
+
+    .logos:hover .logos-slide {
+      animation-play-state: paused;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Logo slider",
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Animation Speed (seconds)",
+      "default": 25,
+      "min": 5,
+      "max": 60,
+      "step": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "image_link",
+          "label": "Image link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo-slider"
+    }
+  ]
+}
+{% endschema %}

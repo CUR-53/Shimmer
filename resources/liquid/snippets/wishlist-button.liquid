@@ -1,0 +1,83 @@
+<wishlist-button
+  class="tw:m-0! tw:p-0!"
+  data-id="{{ product.id }}"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="lucide lucide-heart"
+  >
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+  </svg>
+  <div class="particles-wrapper"></div>
+</wishlist-button>
+
+<style>
+  wishlist-button {
+    position: relative;
+    display: inline-block;
+  }
+
+  wishlist-button:hover {
+    cursor: pointer;
+  }
+
+  wishlist-button svg {
+    transition:
+      fill 0.3s ease-in-out,
+      transform 0.2s ease-in-out;
+  }
+
+  wishlist-button.added-to-wishlist svg {
+    fill: red;
+    transform: scale(1.1);
+    animation: pulse 0.3s ease-in-out;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1.1);
+    }
+  }
+
+  .particles-wrapper {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+  }
+  /* Particle animation */
+  .particles {
+    display: block !important;
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    border-radius: 50%;
+    opacity: 1;
+    animation: explode 0.5s ease-out forwards;
+  }
+
+  @keyframes explode {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--x), var(--y)) scale(0);
+      opacity: 0;
+    }
+  }
+</style>

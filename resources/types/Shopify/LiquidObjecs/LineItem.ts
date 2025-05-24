@@ -1,0 +1,47 @@
+import DiscountAllocation from './DiscountAllocation';
+import type Fulfillment from './Fulfillment';
+import image from './image';
+import Product from './Product';
+import SellingPlanAllocation from './SellingPlanAllocation';
+import TaxLine from './TaxLine';
+import UnitPriceMeasurement from './UnitPriceMeasurement';
+import Variant from './Variant';
+
+export default interface LineItem {
+  discount_allocations: DiscountAllocation[];
+  error_message: string;
+  final_line_price: string;
+  final_price: string;
+  fulfillment: Fulfillment;
+  fulfillment_service: string;
+  gift_card: boolean;
+  grams: number;
+  id: number;
+  image: image;
+  item_components: LineItem[];
+  key: string;
+  line_level_discount_allocations: DiscountAllocation[];
+  line_level_total_discount: number;
+  message: string;
+  options_with_values: { name: string; value: string }[];
+  original_line_price: string;
+  original_price: string;
+  product: Product;
+  product_id: number;
+  properties: { name: string; value: string }[];
+  quantity: number;
+  requires_shipping: boolean;
+  selling_plan_allocation: SellingPlanAllocation;
+  sku: string;
+  successfully_fullfilled_quantity: number;
+  tax_lines: TaxLine[];
+  taxable: boolean;
+  title: string;
+  unit_price: string;
+  unit_price_measurement: UnitPriceMeasurement;
+  url: string;
+  url_to_remove: string;
+  variant: Variant;
+  variant_id: number;
+  vendor: string;
+}

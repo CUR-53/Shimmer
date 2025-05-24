@@ -1,0 +1,394 @@
+{% comment %}
+  SCHEMA IS IN THE BOTTOM FO THIS FILE
+{% endcomment %}
+
+{% liquid
+  assign cookie_banner_overlay_bg_color_red = settings.cookie_banner_overlay_bg_color.red
+  assign cookie_banner_overlay_bg_color_green = settings.cookie_banner_overlay_bg_color.green
+  assign cookie_banner_overlay_bg_color_blue = settings.cookie_banner_overlay_bg_color.blue
+  assign cookie_banner_overlay_opacity = settings.cookie_banner_overlay_opacity
+  assign cookie_banner_overlay_opacity = cookie_banner_overlay_opacity | times: 0.01
+
+  assign cookie_banner_overlay_bg_color = 'rgba(' | append: cookie_banner_overlay_bg_color_red | append: ',' | append: cookie_banner_overlay_bg_color_green | append: ',' | append: cookie_banner_overlay_bg_color_blue | append: ',' | append: cookie_banner_overlay_opacity | append: ')'
+%}
+
+{% if settings.enable_custom_design %}
+  <style>
+    .shopify-pc__banner__dialog,
+    .shopify-pc__prefs__dialog {
+    width: 490px !important;
+    position: fixed !important; /* Make sure the element is positioned absolutely or relatively */
+    left: 50% !important;
+    top: 40% !important;
+    transform: translate(-50%,-50%) !important;
+    max-height: max-content !important;
+    color: {{ settings.cookie_banner_text_color }} !important;
+    background-color: {{ settings.cookie_banner_bg_color }} !important;
+    box-shadow: 0 0 100vh 100vw {{ cookie_banner_overlay_bg_color }} !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    max-width: calc(100% - 2rem) !important;
+    overflow-y: auto !important;
+    padding: 24px !important;
+    }
+
+    .shopify-pc__prefs__dialog {
+    width: calc(100% - 10rem) !important;
+    max-width: calc(100% - 2rem) !important;
+    }
+
+    @media (max-width: 768px) {
+    .shopify-pc__banner__dialog,
+    .shopify-pc__prefs__dialog {
+      max-height: calc(100% - 2rem) !important;
+      max-width: calc(100% - 2rem) !important;
+      width: calc(100% - 2rem) !important;
+    }
+    }
+
+    .shopify-pc__banner__dialog h2,
+    .shopify-pc__banner__dialog a,
+    .shopify-pc__prefs__dialog h2,
+    .shopify-pc__prefs__dialog a,
+    .shopify-pc__prefs__dialog h3,
+    .shopify-pc__prefs__dialog h4,
+    .shopify-pc__prefs__dialog h5,
+    .shopify-pc__prefs__dialog h6,
+    .shopify-pc__prefs__dialog ul,
+    .shopify-pc__prefs__dialog ol,
+    .shopify-pc__prefs__dialog li,
+    .shopify-pc__prefs__dialog p,
+    .shopify-pc__prefs__dialog label,
+    .shopify-pc__banner__dialog label {
+    color: {{ settings.cookie_banner_text_color }} !important;
+    }
+
+    .shopify-pc__banner__dialog h2 {
+    margin: 20px 0 !important;
+    }
+
+    .shopify-pc__banner__body {
+    width: 100%;
+    margin-bottom: 20px !important;
+    }
+
+    .shopify-pc__banner__body p {
+    color: {{ settings.cookie_banner_text_color }} !important;
+    }
+
+    .shopify-pc__prefs__option label span svg {
+    background: hsl(0deg, 0%, 100%, 100%) !important;
+    border-radius: 3px !important;
+    }
+
+    .shopify-pc__prefs__option label span {
+    background: hsl(0deg, 0%, 100%, 100%) !important;
+    }
+
+    .shopify-pc__prefs__option label span svg path {
+    fill: {{ settings.cookie_banner_checkbox_bg_color }} !important;
+    }
+
+    .shopify-pc__banner__dialog button {
+    line-height: 0% !important;
+    }
+
+    #shopify-pc__banner__btn-manage-prefs {
+    text-decoration: none !important;
+    font-family: inherit !important;
+    font-size: 100% !important;
+    flex-basis: 50% !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    line-height: 120% !important;
+    height: unset !important;
+    text-align: center !important;
+    color: {{ settings.cookie_banner_manage_text_color }} !important;
+    background: {{ settings.cookie_banner_manage_bg_color }} !important;
+    border: 1px solid {{ settings.cookie_banner_manage_border_color }} !important;
+    }
+
+    #shopify-pc__banner__btn-manage-prefs button {
+    text-transform: none !important;
+    }
+
+    .shopify-pc__banner__btns {
+    display: grid !important;
+    gap: 12px !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    max-height: 120px !important;
+    }
+
+    .shopify-pc__banner__btn-manage-prefs {
+    display: flex !important;
+    justify-content: center !important;
+    padding: 15px 0 12px !important;
+    align-items: center !important;
+    grid-area: 1 / 1 / 2 / 2 !important;
+    margin: 0 !important;
+    }
+
+    .shopify-pc__banner__dialog button.shopify-pc__banner__btn-accept {
+    border: 1px solid {{ settings.cookie_banner_accept_border_color }} !important;
+    color: {{ settings.cookie_banner_accept_text_color }} !important;
+    background: {{ settings.cookie_banner_accept_bg_color }} !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    .shopify-pc__banner__btn-accept {
+    display: flex !important;
+    padding: 15px 0 12px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    grid-area: 1 / 2 / 2 / 3 !important;
+    margin: 0 !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    .shopify-pc__banner__btn-decline {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    grid-area: 2 / 1 / 3 / 3 !important;
+    padding: 20px 0 !important;
+    margin: 0 !important;
+    max-height: 100px !important;
+    height: 100% !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    button#shopify-pc__banner__btn-decline {
+    text-decoration: underline !important;
+    background: {{ settings.cookie_banner_decline_bg_color }} !important;
+    border: 1px solid {{ settings.cookie_banner_decline_border_color }} !important;
+    color: {{ settings.cookie_banner_decline_text_color }} !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    max-height: 100px !important;
+    height: 100% !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    #shopify-pc__prefs__header-accept {
+    color: {{ settings.cookie_banner_manage_accept_all_text_color }} !important;
+    background: {{ settings.cookie_banner_manage_accept_all_bg_color }} !important;
+    border: 1px solid {{ settings.cookie_banner_manage_accept_all_border_color }} !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    #shopify-pc__prefs__header-decline {
+    color: {{ settings.cookie_banner_manage_decline_text_color }} !important;
+    background: {{ settings.cookie_banner_manage_decline_bg_color }} !important;
+    border: 1px solid {{ settings.cookie_banner_manage_decline_border_color }} !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    #shopify-pc__prefs__header-save {
+    color: {{ settings.cookie_banner_manage_save_text_color }} !important;
+    background: {{ settings.cookie_banner_manage_save_bg_color }} !important;
+    border: 1px solid {{ settings.cookie_banner_manage_save_border_color }} !important;
+    border-radius: {{ settings.cookie_banner_border_radius }}px !important;
+    }
+
+    #shopify-pc__banner {
+    height: fit-content !important;
+    }
+  </style>
+{% endif %}
+
+{% comment %}
+  {
+    "name": "Cookie Banner Design",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_custom_design",
+        "label": "Enable custom design",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "General design"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_bg_color",
+        "label": "Cookie banner background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_text_color",
+        "label": "Cookie banner text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_overlay_bg_color",
+        "label": "Overlay background",
+        "default": "#000000"
+      },
+      {
+        "type": "range",
+        "id": "cookie_banner_overlay_opacity",
+        "label": "Overlay opacity",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "cookie_banner_border_radius",
+        "label": "Border radius",
+        "min": 0,
+        "max": 25,
+        "step": 1,
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "checkboxes"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_checkbox_bg_color",
+        "label": "Checkbox background",
+        "default": "#333333"
+      },
+      {
+        "type": "header",
+        "content": "Accept button"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_accept_bg_color",
+        "label": "Accept button background",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_accept_text_color",
+        "label": "Accept button text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_accept_border_color",
+        "label": "Accept button border",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Decline button"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_decline_bg_color",
+        "label": "Decline button background",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_decline_text_color",
+        "label": "Decline button text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_decline_border_color",
+        "label": "Decline button border",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Manage preferences button"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_bg_color",
+        "label": "Manage preferences button background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_text_color",
+        "label": "Manage preferences button text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_border_color",
+        "label": "Manage preferences button border",
+        "default": "#919191"
+      },
+      {
+        "type": "header",
+        "content": "Accept all button on manage preferences screen"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_accept_all_bg_color",
+        "label": "Accept all button background on manage preferences screen",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_accept_all_text_color",
+        "label": "Accept all button text on manage preferences screen",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_accept_all_border_color",
+        "label": "Accept all button border on manage preferences screen",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Decline button on manage preferences screen"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_decline_bg_color",
+        "label": "Decline button background on manage preferences screen",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_decline_text_color",
+        "label": "Decline button text on manage preferences screen",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_decline_border_color",
+        "label": "Decline button border on manage preferences screen",
+        "default": "#919191"
+      },
+      {
+        "type": "header",
+        "content": "Save button on manage preferences screen"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_save_bg_color",
+        "label": "Save button background on manage preferences screen",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_save_text_color",
+        "label": "Save button text on manage preferences screen",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "cookie_banner_manage_save_border_color",
+        "label": "Save button border on manage preferences screen",
+        "default": "#ffffff"
+      }
+    ]
+  },
+{% endcomment %}

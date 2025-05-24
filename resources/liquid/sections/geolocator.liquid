@@ -1,0 +1,563 @@
+{% if section.settings.show_modal %}
+  {% style %}
+    #geolocator-modal {
+      display: block !important;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+      width: 500px;
+      height: max-content;
+      max-width: calc(100% - 2rem);
+      max-height: calc(100% - 2rem);
+      opacity: 0;
+      background-color: {{ section.settings.modal_background }};
+      border-radius: 0.5rem;
+      box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      z-index: 1000;
+    }
+
+    #geolocator-modal.active,
+    #geolocator-countrylist-modal.active {
+      opacity: 1;
+      display: block;
+    }
+
+    #geolocator-countrylist-modal {
+      display: none;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+      width: 600px;
+      height: max-content;
+      max-width: calc(100% - 2rem);
+      max-height: calc(100% - 2rem);
+      opacity: 0;
+      background-color: {{ section.settings.modal_background }};
+      border-radius: 0.5rem;
+      box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+      padding: 3.5rem 2rem 2rem;
+      z-index: 1001;
+    }
+
+    @media (min-width: 768px) {
+      #geolocator-countrylist-modal {
+        padding: 2rem;
+      }
+    }
+
+    .geolocator-overlay {
+      display: block !important;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.55);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+
+    .leave-button:hover,
+    .stay-button:hover {
+      background-color: var(--hover-bg) !important;
+      color: var(--hover-text) !important;
+    }
+
+    .countrylist-button {
+      background-color: {{ section.settings.countrylist_button_bg }} !important;
+      color: {{ section.settings.countrylist_button_text }} !important;
+      --hover-bg: {{ section.settings.countrylist_button_bg_hover }};
+      --hover-text: {{ section.settings.countrylist_button_text_hover }};
+    }
+
+    .countrylist-button:hover {
+      background-color: var(--hover-bg) !important;
+      color: var(--hover-text) !important;
+    }
+
+    .countrylist-button p {
+      color: {{ section.settings.countrylist_button_text }} !important;
+    }
+
+    .countrylist-button:hover p {
+      color: var(--hover-text) !important;
+    }
+  {% endstyle %}
+
+  <geolocator-component class="tw:fixed tw:inset-0 tw:w-full tw:h-screen tw:z-[99999] tw:hidden">
+    {% comment %}
+      Geolocation modal
+    {% endcomment %}
+
+    <div id="geolocator-modal" class="tw:relative">
+      <a href="#" id="close-geolocator-modal" class="tw:absolute tw:top-[14px] tw:right-[14px]">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-4 w-4">
+          <path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>
+        </svg>
+      </a>
+      <div id="geolocator-content-placeholder"></div>
+    </div>
+
+    {% comment %}
+      Geolocation Country list modal
+    {% endcomment %}
+
+    <div id="geolocator-countrylist-modal">
+      <div class="tw:relative tw:h-full">
+        {% comment %}
+          <a href="#" id="close-geolocator-countrylist-modal" class="tw:absolute tw:hidden! tw:md:block! tw:top-[14px] tw:right-[14px]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-4 w-4">
+              <path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>
+            </svg>
+          </a>
+        {% endcomment %}
+        <div class="tw:grid tw:grid-cols-1 tw:gap-4 tw:h-max tw:place-content-center tw-relative">
+          {% for block in section.blocks %}
+            <a
+              href="{% if block.settings.type == 'market' %}#{% else %}{{ block.settings.url }}{% endif %}"
+              data-locale="{{ block.settings.locale }}"
+              data-handle="{{ block.settings.handle }}"
+              data-type="{{ block.settings.type }}"
+              class="countrylist-button tw:p-4! tw:rounded-md! tw:shadow-md! tw:transition-all! tw:duration-300! tw:transform! tw:overflow-hidden! tw:flex! tw:items-center! tw:justify-center! tw:flex-col! tw:gap-4!">
+              <div class="tw:flex tw:gap-2 tw:items-center tw:justify-center tw:w-full">
+                {% if block.settings.flag != blank %}
+                  <div class="tw:relative tw:h-[40px] tw:w-[60px] tw:overflow-hidden tw:rounded-md tw:shadow-md">
+                    <img loading="lazy" decoding="async" data-nimg="fill" class="tw:object-cover" src="{{ block.settings.flag |  image_url: width: 500 }}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+                  </div>
+                {% endif %}
+                <p class="tw:text-[16px] tw:m-0! tw:font-bold">{{ block.settings.country_name }}</p>
+              </div>
+            </a>
+          {% endfor %}
+          <a
+            style="
+              background-color: {{ section.settings.button_primary_bg }};
+              color: {{ section.settings.button_primary_text }};
+              --hover-bg: {{ section.settings.button_primary_bg_hover }};
+              --hover-text: {{ section.settings.button_primary_text_hover }};
+            "
+            href="#"
+            id="close-geolocator-countrylist-modal"
+            data-inmodaltoggle="true"
+            class="tw:p-4! md:tw:hidden! tw:rounded-md! tw:shadow-md! tw:transition-all! tw:duration-300! tw:transform! tw:overflow-hidden! tw:flex! tw:items-center! tw:justify-center! tw:flex-col! tw:gap-4!">
+            <p class="tw:text-[16px] tw:m-0! tw:font-bold">Gå tilbage</p>
+            {% comment %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-4 w-4">
+                <path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>
+              </svg>
+            {% endcomment %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {% comment %}
+      Geolocation overlay
+    {% endcomment %}
+    <div class="geolocator-overlay"></div>
+
+    <script id="geolocator-script" type="application/json">
+      [
+        {% for block in section.blocks %}
+          {
+            "handle": "{{ block.settings.handle }}",
+            "locale": "{{ block.settings.locale }}",
+            "primary": {{ block.settings.primary }},
+            "id": "{{ block.id }}",
+            "type": "{{ block.settings.type }}"
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    </script>
+
+    <template id="geolocator-content-tempalte">
+      {% for block in section.blocks %}
+        <div data-id="{{ block.id }}" class="tw:flex tw:flex-col tw:gap-8">
+          <div class="tw:flex tw:gap-2 tw:items-center">
+            {% if block.settings.flag != blank %}
+              <div class="tw:relative tw:h-[40px] tw:w-[60px] tw:overflow-hidden tw:rounded-md tw:shadow-md">
+                <img loading="lazy" decoding="async" data-nimg="fill" class="tw:object-cover" src="{{ block.settings.flag |  image_url: width: 500 }}" style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;">
+              </div>
+            {% endif %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin h-4 w-4 mr-1">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <p class="tw-text-[14px] tw:m-0! tw:text-[#717171]">{{ block.settings.country_name }}</p>
+          </div>
+
+          <div class="tw:flex tw:flex-col tw:gap-2">
+            <h3 class="tw:text-black tw:m-0! tw:text-[24px]! tw:font-bold!">{{ block.settings.heading }}</h3>
+            <p class="tw:text-[#717171] tw:m-0! tw:text-[16px]">{{ block.settings.description }}</p>
+          </div>
+
+          <div class="tw:bg-white tw:p-4 tw:flex tw:flex-col tw:gap-2 tw:rounded-md">
+            <div class="tw:flex tw:items-center tw:gap-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe h-5 w-5 text-primary">
+                <circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path>
+              </svg>
+              <p class="tw:m-0! tw:text-[16px] tw:text-black">
+                {{ block.settings.subheading }}
+              </p>
+            </div>
+            <p class="tw-text-[14px] tw:m-0! tw:text-[#717171]">
+              {{ block.settings.subdescription }}
+            </p>
+          </div>
+
+          <div class="tw:flex tw:gap-3 tw:justify-between">
+            <a
+              href="#"
+              data-locale="{{ block.settings.locale }}"
+              data-handle="{{ block.settings.handle }}"
+              data-type="{{ block.settings.type }}"
+              class="leave-button tw:w-full! tw:rounded-md! tw:px-4! tw:py-2! tw:font-semibold! tw:text-[14px]! tw:text-center! tw:transition-all! tw:duration-300! tw:ease-in-out!"
+              style="
+                background-color: {{ section.settings.button_primary_bg }};
+                color: {{ section.settings.button_primary_text }};
+                --hover-bg: {{ section.settings.button_primary_bg_hover }};
+                --hover-text: {{ section.settings.button_primary_text_hover }};
+              ">
+              {{- block.settings.leave -}}
+            </a>
+            <a
+              href="{% if block.settings.type == 'market' %}#{% else %}{{ block.settings.url }}{% endif %}"
+              data-locale="{{ block.settings.locale }}"
+              data-handle="{{ block.settings.handle }}"
+              data-type="{{ block.settings.type }}"
+              class="stay-button tw:rounded-md! tw:px-4! tw:py-2! tw:font-semibold! tw:text-[14px]! tw:w-[150px]! tw:text-center! tw:transition-all! tw:duration-300! tw:ease-in-out!"
+              style="
+                background-color: {{ section.settings.button_secondary_bg }};
+                color: {{ section.settings.button_secondary_text }};
+                --hover-bg: {{ section.settings.button_secondary_bg_hover }};
+                --hover-text: {{ section.settings.button_secondary_text_hover }};
+              ">
+              {{- block.settings.stay -}}
+            </a>
+          </div>
+
+          <a
+            href="#"
+            data-inmodaltoggle="true"
+            class="country-modal-toggle tw:absolute! tw:flex! tw:w-max! tw:gap-4! tw:p-2! tw:items-center! tw-w-[200px]! tw:rounded-md! tw:left-[50%]! tw:top-[-60px]! tw:shadow-md!"
+            style="background-color: {{ section.settings.country_selector_bg }}; transform: translateX(-50%);">
+            <div class="tw:relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe h-5 w-5 text-primary">
+                <circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path>
+              </svg>
+            </div>
+            <p class="tw:text-[14px]! tw:m-0! tw:text-black! tw:font-bold!">{{ block.settings.change_country }}</p>
+          </a>
+        </div>
+      {% endfor %}
+    </template>
+  </geolocator-component>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Geolocator",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_modal",
+      "label": "Show Modal",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Modal Colors"
+    },
+    {
+      "type": "color",
+      "id": "modal_background",
+      "label": "Modal Background Color",
+      "default": "#fdf3f4"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_primary_bg",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_primary_text",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_primary_bg_hover",
+      "label": "Hover Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_primary_text_hover",
+      "label": "Hover Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "button_secondary_bg",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_secondary_text",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_secondary_bg_hover",
+      "label": "Hover Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_secondary_text_hover",
+      "label": "Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Country Selector Colors"
+    },
+    {
+      "type": "color",
+      "id": "country_selector_bg",
+      "label": "Toggle Button Background",
+      "default": "#ebe2e2"
+    },
+    {
+      "type": "header",
+      "content": "Country List Button Colors"
+    },
+    {
+      "type": "color",
+      "id": "countrylist_button_bg",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "countrylist_button_text",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "countrylist_button_bg_hover",
+      "label": "Hover Background Color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "countrylist_button_text_hover",
+      "label": "Hover Text Color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "country",
+      "name": "Country",
+      "settings": [
+        {
+          "type": "select",
+          "id": "type",
+          "label": "Type",
+          "options": [
+            {
+              "value": "country",
+              "label": "Country"
+            },
+            {
+              "value": "market",
+              "label": "Market"
+            }
+          ],
+          "default": "market"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "flag",
+          "label": "Flag"
+        },
+        {
+          "type": "text",
+          "id": "country_name",
+          "label": "Country Name",
+          "default": "United States"
+        },
+        {
+          "type": "text",
+          "id": "handle",
+          "label": "Handle",
+          "default": "US"
+        },
+        {
+          "type": "text",
+          "id": "locale",
+          "label": "Locale",
+          "default": "en"
+        },
+        {
+          "type": "checkbox",
+          "id": "primary",
+          "label": "Primary",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "You should consider heading to the United States"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "We have detected that you are in country. Would you like to visit the site for country?"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Local Recommendations"
+        },
+        {
+          "type": "text",
+          "id": "subdescription",
+          "label": "Subdescription",
+          "default": "We've curated special offers and content based on your location."
+        },
+        {
+          "type": "text",
+          "id": "leave",
+          "label": "Leave",
+          "default": "Go to United States"
+        },
+        {
+          "type": "text",
+          "id": "stay",
+          "label": "Stay",
+          "default": "Stay here"
+        },
+        {
+          "type": "text",
+          "id": "change_country",
+          "label": "Change Country",
+          "default": "See other countries"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Geolocator",
+      "name": "Geolocator",
+      "blocks": [
+        {
+          "type": "country",
+          "settings": {
+            "type": "market",
+            "country_name": "United States",
+            "handle": "US",
+            "locale": "en",
+            "primary": true,
+            "heading": "You should consider heading to the United States",
+            "description": "We could offer a better shopping experience if you were to switch to the United States site.",
+            "subheading": "Local Recommendations",
+            "subdescription": "We've curated special offers and content based on your location.",
+            "leave": "Go to United States",
+            "stay": "Stay here"
+          }
+        },
+        {
+          "type": "country",
+          "settings": {
+            "type": "market",
+            "country_name": "Danmark",
+            "handle": "DK",
+            "locale": "da",
+            "primary": true,
+            "heading": "Du bør overveje at skifte til Danmark",
+            "description": "Vi kan tilbyde en bedre shoppingoplevelse, hvis du skifter til den danske side.",
+            "subheading": "Lokale anbefalinger",
+            "subdescription": "Vi har udvalgt særlige tilbud og indhold baseret på din placering.",
+            "leave": "Gå til Danmark",
+            "stay": "Bliv her"
+          }
+        },
+        {
+          "type": "country",
+          "settings": {
+            "type": "market",
+            "country_name": "Sverige",
+            "handle": "SE",
+            "locale": "sv",
+            "primary": true,
+            "heading": "Du bör överväga att byta till Sverige",
+            "description": "Vi kan erbjuda en bättre shoppingupplevelse om du byter till den svenska sidan.",
+            "subheading": "Lokala rekommendationer",
+            "subdescription": "Vi har skapat speciella erbjudanden och innehåll baserat på din plats.",
+            "leave": "Gå till Sverige",
+            "stay": "Stanna här"
+          }
+        },
+        {
+          "type": "country",
+          "settings": {
+            "type": "market",
+            "country_name": "United Kingdom",
+            "handle": "UK",
+            "locale": "en",
+            "primary": true,
+            "heading": "You should consider heading to the United Kingdom",
+            "description": "We could offer a better shopping experience if you were to switch to the United Kingdom site.",
+            "subheading": "Local Recommendations",
+            "subdescription": "We've curated special offers and content based on your location.",
+            "leave": "Go to United Kingdom",
+            "stay": "Stay here"
+          }
+        },
+        {
+          "type": "country",
+          "settings": {
+            "country_name": "Norge",
+            "handle": "NO",
+            "locale": "no",
+            "primary": true,
+            "heading": "Du bør vurdere å bytte til Norge",
+            "description": "Vi kan tilby en bedre handleopplevelse hvis du bytter til den norske siden.",
+            "subheading": "Lokale anbefalinger",
+            "subdescription": "Vi har valgt ut spesialtilbud og innhold basert på din plassering.",
+            "leave": "Gå til Norge",
+            "stay": "Bli her"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

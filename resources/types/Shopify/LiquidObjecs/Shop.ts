@@ -1,0 +1,43 @@
+import Address from './Address';
+import Brand from './Brand';
+import Currency from './Currency';
+import Metafield from './Metafield';
+import Metaobject from './Metaobject';
+import Policy from './Policy';
+import ShopLocale from './ShopLocale';
+
+export default interface Shop {
+  accepts_gift_cards: boolean;
+  address: Address;
+  brand: Brand;
+  collections_count: number;
+  currency: string;
+  customer_accounts_enabled: boolean;
+  customer_accounts_optional: boolean;
+  description: string;
+  domain: string;
+  email: string;
+  enabled_currencies: Currency[];
+  enabled_payment_types: string[];
+  id: number;
+  metafields: Metafield[];
+  metaobjects: Metaobject[];
+  money_format: Currency;
+  money_with_currency_format: Currency;
+  name: string;
+  password_message: string;
+  permanent_domain: string;
+  phone: string;
+  policies: Policy[];
+  privacy_policy: Policy;
+  products_count: number;
+  published_locales: ShopLocale[];
+  refund_policy: Policy;
+  secure_url: string;
+  shipping_policy: Policy;
+  subsription_policy: Policy;
+  terms_of_service: Policy;
+  types: string[];
+  url: string;
+  vendors: string[];
+}

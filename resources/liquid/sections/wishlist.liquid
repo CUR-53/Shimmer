@@ -1,0 +1,162 @@
+{% liquid
+  assign padding_x = section.settings.padding_x
+  assign padding_y = section.settings.padding_y
+  assign mobile_scale_divider = section.settings.mobile_scale_divider
+%}
+
+<style>
+  #{{ section.id }} {
+    padding: {{ padding_y }}px {{ padding_x }}px;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    #{{ section.id }} {
+      padding: {{ padding_y | divided_by: mobile_scale_divider }}px {{ padding_x | divided_by: mobile_scale_divider }}px;
+    }
+  }
+</style>
+
+<section id="{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="tw:flex tw:flex-col tw:gap-6">
+    <div class="tw:flex tw:flex-col tw:justify-center tw:items-center">
+      <h2 class="tw:text-black tw:text-[24px] tw:font-bold tw:mb-4">
+        {{ section.settings.title }}
+      </h2>
+      <h3 class="tw:text-black tw:text-[18px] tw:mb-4">
+        {{ section.settings.sub_title }}
+      </h3>
+      <a href="#" id="share-wishlist" class="tw:text-black tw:text-[16px] tw:font-bold tw:underline">Share Wishlist</a>
+    </div>
+
+    <wishlist-component
+      data-url="{{ routes.search_url }}?section_id={{ section.id }}&type=product"
+      class="tw:grid tw:grid-cols-2 tw:gap-4 tw:md:grid-cols-3 tw:lg:grid-cols-4"
+    >
+      {% if search.performed %}
+        {%- for product in search.results -%}
+          {% comment %}
+            ! Replace with your themes card product component
+            {% render 'card-product', card_product: product %}
+          {% endcomment %}
+        {%- endfor -%}
+      {% endif %}
+    </wishlist-component>
+  </div>
+</section>
+
+<style>
+  section#{{ section.id }} h1,
+  section#{{ section.id }} h2,
+  section#{{ section.id }} h3,
+  section#{{ section.id }} h4,
+  section#{{ section.id }} h5,
+  section#{{ section.id }} h6,
+  section#{{ section.id }} p,
+  section#{{ section.id }} a,
+  section#{{ section.id }} span {
+    margin: 0;
+  }
+
+
+
+  .remove-item:before {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: #000;
+    transition: 0.3s;
+  }
+
+  .remove-item:hover:before {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .remove-item:before {
+      content: none;
+    }
+
+    .remove-item {
+      text-decoration: underline;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Wishlist"
+    },
+    {
+      "type": "text",
+      "id": "sub_title",
+      "label": "Sub Title",
+      "default": "Add your favorite items to the wishlist"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Section Max Width",
+      "default": 1500,
+      "min": 0,
+      "max": 1500,
+      "step": 25,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding Y-axis",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding X-axis",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_scale_divider",
+      "label": "Mobile Scale Divider",
+      "info": "This will divide the padding values by this number on mobile devices",
+      "default": 1,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wishlist"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,85 @@
+# This file contains a list of files and folders to be ignored when
+# committing to a git repository.  Ignored files are both Slate project
+# specific files as well as commonly ignored files on any project.
+
+# For more information on this .gitignore files, see GitHub's
+# documentation: https://help.github.com/articles/ignoring-files/
+
+# Project #
+###################
+node_modules
+dist
+upload
+deploy.log
+package-lock.json
+config.yml
+_styles
+shopify.theme.toml
+/node_modules
+.eslintcache
+mix-manifest.json
+.env
+
+# Store Specific settings #
+# TODO: Skal /locales med? Hvordan håndteres det i forhold til at vi har flere sprog?
+###################
+/shopify-theme/config/settings_data.json
+/shopify-theme/locales
+/shopify-theme/templates
+/shopify-theme/sections/*.json
+
+
+.shopify
+
+
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+/shopify-theme/assets/edition.js
+/shopify-theme/assets/edition.css
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Custom #
+######################
+*.sass-cache*
+_site
+/.idea
+secrets.json
+.jekyll-metadata
+.ruby-version
+/package-lock.json
+node_modules

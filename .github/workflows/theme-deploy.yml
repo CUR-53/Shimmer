@@ -1,0 +1,42 @@
+name: Shopify Theme deploy
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+
+      - name: Install packages
+        run: npm install
+
+      - name: Production Build
+        run: npm run webpack:build
+
+      - name: Zip artifact for deployment
+        run: |
+          cd shopify-theme
+          zip -r release.zip .
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: shopify-theme
+          path: ./shopify-theme/release.zip
+          retention-days: 1
+  ReuseableMatrixJobForDeployment:
+    needs: build
+    strategy:
+      fail-fast: true
+      matrix:
+        target: ['dk']
+    uses: ./.github/workflows/deployment.yml
+    with:
+      target-env: ${{ matrix.target }}
+    secrets: inherit

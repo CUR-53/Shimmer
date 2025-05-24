@@ -1,0 +1,16 @@
+{
+  "include": ["./**/*.ts", "./**/*.js", ".*.js", "./"],
+  "exclude": ["node_modules", "shopify-theme/assets"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "@ts/*": ["resources/types/*"],
+      "@utils/*": ["resources/scripts/utils/*"],
+      "@components/*": ["resources/scripts/components/*"]
+    }
+  }
+}

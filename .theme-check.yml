@@ -1,0 +1,18 @@
+root: shopify-theme
+RemoteAsset:
+  enabled: false
+ImgWidthAndHeight:
+  enabled: true
+ImgLazyLoading:
+  enabled: true
+SchemaJsonFormat:
+  enabled: true
+  severity: style
+  start_level: 0
+  indent: '  '
+NestedSnippet:
+  enabled: false
+VariableName:
+  enabled: false
+AssetPreload:
+  enabled: false
