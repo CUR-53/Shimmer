@@ -33,7 +33,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
-          bundler: 'latest'
+          bundler: "latest"
 
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli @shopify/theme
@@ -43,7 +43,7 @@ jobs:
         env:
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.THEME_ACCESS }}
           SHOPIFY_FLAG_STORE: ${{ vars.SHOPIFY_URL }}
-          SHOPIFY_FLAG_PATH: '.'
+          SHOPIFY_FLAG_PATH: "."
           SHOPIFY_CLI_TTY: 0
         run: |
           # Pull existing locales from Shopify
@@ -54,5 +54,5 @@ jobs:
             shopify theme push -a --live --json
           elif [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "Deploying to development theme..."
-            shopify theme push --unpublished --json --theme Edition-dev-${{ github.run_number }}
+            shopify theme push --unpublished --json --theme Shimmer-dev-${{ github.run_number }}
           fi

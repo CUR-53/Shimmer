@@ -39,9 +39,9 @@ If this is your first time setting up the project, follow these steps:
    - Inside `<head>`, add the following
 
      ```liquid
-     {{- 'edition.css' | asset_url | stylesheet_tag: preload: true -}}
+     {{- 'shimmer.css' | asset_url | stylesheet_tag: preload: true -}}
 
-     <script src="{{ 'edition.js' | asset_url }}" defer></script>
+     <script src="{{ 'shimmer.js' | asset_url }}" defer></script>
      ```
 
 ---

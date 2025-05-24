@@ -1,7 +1,7 @@
 {
-  "name": "shop_here",
+  "name": "60c1bd-2",
   "version": "1.0.0",
-  "description": "shop_here",
+  "description": "60c1bd-2",
   "main": "app.ts",
   "sideEffects": [
     "*.css",
@@ -11,9 +11,9 @@
     "start": "run-p -sr webpack:watch shopify:dev",
     "webpack:watch": "npx mix watch",
     "webpack:build": "npx mix",
-    "shopify:dev": "shopify theme dev --store shop_here --path ./shopify-theme",
-    "pull:theme": "shopify theme pull -n --store shop_here --path ./shopify-theme",
-    "pull:config": "shopify theme pull --nodelete --only config/settings_data.json locales/*.json templates/**/*.json templates/*.json sections/*.json -s shop_here --path ./shopify-theme",
+    "shopify:dev": "shopify theme dev --store 60c1bd-2 --path ./shopify-theme",
+    "pull:theme": "shopify theme pull -n --store 60c1bd-2 --path ./shopify-theme",
+    "pull:config": "shopify theme pull --nodelete --only config/settings_data.json locales/*.json templates/**/*.json templates/*.json sections/*.json -s 60c1bd-2 --path ./shopify-theme",
     "theme:check": "shopify theme check",
     "format": "prettier . --write",
     "prepare": "husky",

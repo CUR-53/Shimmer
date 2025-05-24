@@ -41,8 +41,8 @@ mix-manifest.json
 *.exe
 *.o
 *.so
-/shopify-theme/assets/edition.js
-/shopify-theme/assets/edition.css
+/shopify-theme/assets/shimmer.js
+/shopify-theme/assets/shimmer.css
 
 # Packages #
 ############

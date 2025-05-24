@@ -7,10 +7,10 @@ declare global {
 
     dataLayer: any[];
     customDataLayerEnabled: boolean;
-    editionProductData: any;
-    editionCollectionData: any;
-    editionUserData: any;
-    editionContextData: any;
+    shimmerProductData: any;
+    shimmerCollectionData: any;
+    shimmerUserData: any;
+    shimmerContextData: any;
     privacyBanner: {
       showPreferences: () => any;
       loadBanner: () => any;

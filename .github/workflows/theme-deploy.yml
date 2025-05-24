@@ -3,7 +3,7 @@ name: Shopify Theme deploy
 on:
   push:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        target: ['dk']
+        target: ["b2c"]
     uses: ./.github/workflows/deployment.yml
     with:
       target-env: ${{ matrix.target }}
